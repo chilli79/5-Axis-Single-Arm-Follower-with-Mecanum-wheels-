@@ -52,7 +52,7 @@ Servos: 4x High-Torque Servos (Base, Elbow, Wrist, Gripper).
 
 Power Supply: 7.4V - 12V Li-ion or LiPo battery (with common ground to ESP32).
 
-📋 Pin Mapping
+
 <img width="1036" height="465" alt="Screenshot 2026-01-07 at 11 37 22 AM" src="https://github.com/user-attachments/assets/e0390de0-eb9f-448e-aa6a-d8e411258706" />
 
 💻 Software & Protocol
