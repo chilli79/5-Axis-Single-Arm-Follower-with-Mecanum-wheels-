@@ -1,18 +1,20 @@
+![WhatsApp Image 2026-01-07 at 11 46 50 AM](https://github.com/user-attachments/assets/6d9889ba-05a6-490a-a068-ad7ce029f494)
 5-Axis Robot Arm with Mecanum Mobile Base (ESP32-BLE)
+![WhatsApp Image 2026-01-07 at 11 48 53 AM](https://github.com/user-attachments/assets/79bf0e2e-aa61-4123-a637-df274bf5b22d)
 
-A real-time, high-performance robotic system integrating a 4-DOF (plus gripper) robotic arm and a Mecanum-wheeled mobile platform. The system is powered by an ESP32 and utilizes Bluetooth Low Energy (BLE) for low-latency control via the MicroBlue protocol.
+A real-time, high-performance robotic system integrating a 5-Axis robotic arm and a high-speed mobile platform. The system is powered by an ESP32 and utilizes Bluetooth Low Energy (BLE) for low-latency control via the MicroBlue protocol.
 
-🚀 Features
+🚀 5-Axis Kinematics
 
-5-Axis Control: Includes Base rotation, Elbow, Wrist, and a precision Jaw/Gripper.
+Base Rotation: 180-degree horizontal sweep for global orientation.
 
-High-Speed Drivetrain: Mobile base configured for maximum performance (PWM duty cycle 255).
+Elbow Actuation: Vertical reach with expanded PWM range for maximum clearance.
 
-Low-Latency BLE: Implements the Nordic UART Service (NUS) for seamless smartphone integration.
+Wrist Pitch: Fine-tuned positioning of the end-effector.
 
-Gradual Actuation: Smooth, degree-by-degree gripper movement to prevent servo jitter and mechanical stress.
+Pivot Axis: Independent rotational axis for tool orientation (controlled via b1/b2).
 
-Smart Initialization: Defined "Rest" positions (Base at 180°, Elbow at 90°) to ensure safe power-on sequences.
+Jaw/Gripper: Controlled clamping with gradual movement logic to ensure grip stability.
 
 📦 Components List
 
@@ -22,64 +24,45 @@ Microcontroller: 1x ESP32 DevKit V1 (30-pin).
 
 Motor Driver: 1x L298N Dual H-Bridge Motor Driver Module.
 
-Voltage Regulator: XL4015 or LM2596 Buck Converter (to step down battery voltage for servos/ESP32).
+Voltage Regulator: XL4015 or LM2596 Buck Converter.
 
-Servos: 4x MG996R or SG90 High-Torque Servos (Base, Elbow, Wrist, Gripper).
+Servos: 5x High-Torque Servos (Base, Elbow, Wrist, Pivot, Gripper).
 
-Motors: 4x DC Geared Motors (typically 3V-12V).
-
-Battery: 7.4V (2S) or 11.1V (3S) Li-ion/LiPo battery pack.
-
-Mechanical
-
-Chassis: 4WD Aluminum or Acrylic Robot Chassis.
-
-Wheels: 4x 60mm/80mm Mecanum Wheels (Omnidirectional).
-
-Arm Structure: 3D Printed or Laser-cut Acrylic 4-DOF Robotic Arm Kit.
-
-Hardware: M3 Screws, Nuts, and Brass Spacers.
-
-🛠️ Hardware Requirements
-
-Microcontroller: ESP32 (DevKit V1 or similar).
-
-Motor Driver: L298N Dual H-Bridge Bridge.
-
-Actuators: 4x DC Motors (Mecanum Wheel Configuration).
-
-Servos: 4x High-Torque Servos (Base, Elbow, Wrist, Gripper).
-
-Power Supply: 7.4V - 12V Li-ion or LiPo battery (with common ground to ESP32).
+Motors: 4x DC Geared Motors for Mecanum wheels.
 
 
-<img width="1036" height="465" alt="Screenshot 2026-01-07 at 11 37 22 AM" src="https://github.com/user-attachments/assets/e0390de0-eb9f-448e-aa6a-d8e411258706" />
+<img width="1083" height="438" alt="image" src="https://github.com/user-attachments/assets/69a93b15-efce-4a63-bada-ebde233add68" />
+
+
+⚙️ Mecanum Wheel & Motor Wiring
+
+To control four Mecanum wheels using a single L298N driver, the motors are wired in two parallel banks (Left and Right).
+
+L298N to ESP32 Connections
+
+ENA (Speed Left): GPIO 33
+
+IN1 / IN2 (Left Bank): GPIO 26 / GPIO 25
+
+IN3 / IN4 (Right Bank): GPIO 19 / GPIO 5
+
+ENB (Speed Right): GPIO 2
+
+Motor to L298N Connections
+
+OUT1 / OUT2: Connects to the Front-Left and Rear-Left motors in parallel.
+
+OUT3 / OUT4: Connects to the Front-Right and Rear-Right motors in parallel.
+
+Note: Ensure the polarity of the motors in each bank is matched so they rotate in the same direction for forward/reverse movement.
 
 💻 Software & Protocol
 
-The system uses a custom MicroBlue Packet Decoder to interpret serial data:
-[SOH][ID][STX][Value][ETX]
+Uses the MicroBlue Protocol: [SOH][ID][STX][Value][ETX]
 
-Driving: Controlled via 'U' (Up), 'D' (Down), 'L' (Left), 'R' (Right).
+Movement: 255 PWM (Maximum Speed).
 
-Arm: Absolute positioning via sliders (sl0-sl2).
-
-Gripper: Toggle logic via button b0.
-
-🔧 Installation
-
-Libraries: Install the ESP32Servo library via the Arduino Library Manager.
-
-Board Manager: Ensure the ESP32 board package is installed (v3.0+ recommended).
-
-Upload: Flash MicroBlue_Robot_Controller_Final.ino to your ESP32.
-
-Connect: Open the MicroBlue app, scan for MicroBlue_RobotArm, and start controlling.
-
-📝 Resume Highlights
-
-Integrated 4-Axis Robotic System (ESP32/BLE): Developed and deployed C++ firmware on an ESP32 for the real-time control of a 4-axis robot arm and mobile base.
-
-Advanced Control & Protocol Implementation: Established a robust BLE connection using NUS and implemented a custom serial protocol for simultaneous kinematic and motor control.
+Rest State: Base: 180°, Elbow: 90°, Pivot: 90°.
 
 Developed as a part of an advanced robotics integration project focusing on embedded systems and wireless communication.
+
