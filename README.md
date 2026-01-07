@@ -1,163 +1,85 @@
-5-Axis Single Arm Mobile Manipulator
-A high-precision 5-axis robotic arm integrated with an omnidirectional Mecanum wheel base. This project combines complex inverse kinematics with fluid mobile navigation for applications in automated sorting, research, and remote manipulation.
+5-Axis Robot Arm with Mecanum Mobile Base (ESP32-BLE)
 
-## Key Features
-Omnidirectional Mobility: 4x Mecanum wheels allowing for lateral, diagonal, and rotational movement without changing orientation.
+A real-time, high-performance robotic system integrating a 4-DOF (plus gripper) robotic arm and a Mecanum-wheeled mobile platform. The system is powered by an ESP32 and utilizes Bluetooth Low Energy (BLE) for low-latency control via the MicroBlue protocol.
 
-5-DOF Manipulation: Single arm featuring Base Rotation, Shoulder, Elbow, Wrist Pitch, and Wrist Roll.
+🚀 Features
 
-Precision Control: Driven by [Insert Microcontroller, e.g., ESP32/Arduino/Raspberry Pi] using [Insert Stepper/Servo Drivers].
+5-Axis Control: Includes Base rotation, Elbow, Wrist, and a precision Jaw/Gripper.
 
-Kinematic Engine: Integrated Inverse Kinematics (IK) for the arm and velocity vector mapping for the Mecanum base.
+High-Speed Drivetrain: Mobile base configured for maximum performance (PWM duty cycle 255).
 
-## Hardware Architecture
-1. The Base (Mecanum Drive)
+Low-Latency BLE: Implements the Nordic UART Service (NUS) for seamless smartphone integration.
 
-The base uses four independent motors to achieve 3 degrees of freedom on a 2D plane.
+Gradual Actuation: Smooth, degree-by-degree gripper movement to prevent servo jitter and mechanical stress.
 
-Motors: [e.g., NEMA 17 Steppers or DC Geared Motors]
+Smart Initialization: Defined "Rest" positions (Base at 180°, Elbow at 90°) to ensure safe power-on sequences.
 
-Wheels: [e.g., 60mm/97mm Mecanum Wheels]
+📦 Components List
 
-Chassis: [e.g., Laser-cut Acrylic / 3D Printed / Aluminum Profile]
+Electronics
 
-2. The Arm (5-Axis)
+Microcontroller: 1x ESP32 DevKit V1 (30-pin).
 
-The arm is designed for a balance between reach and lifting capacity.
+Motor Driver: 1x L298N Dual H-Bridge Motor Driver Module.
 
-Axis	Function	Range	Actuator
-J1	Base Rotation	±180°	[Insert Motor]
-J2	Shoulder	-45° to 90°	[Insert Motor]
-J3	Elbow	±150°	[Insert Motor]
-J4	Wrist Pitch	±90°	[Insert Motor]
-J5	Wrist Roll	Continuous	[Insert Motor]
-## Kinematics & Mathematics
-Mecanum Drive Logic
+Voltage Regulator: XL4015 or LM2596 Buck Converter (to step down battery voltage for servos/ESP32).
 
-To translate desired velocity (V 
-x
-​	
- ,V 
-y
-​	
- ,ω) into individual wheel speeds, we use the following transformation:
+Servos: 4x MG996R or SG90 High-Torque Servos (Base, Elbow, Wrist, Gripper).
 
+Motors: 4x DC Geared Motors (typically 3V-12V).
 
-​	
-  
-ω 
-fl
-​	
- 
-ω 
-fr
-​	
- 
-ω 
-rl
-​	
- 
-ω 
-rr
-​	
- 
-​	
-  
+Battery: 7.4V (2S) or 11.1V (3S) Li-ion/LiPo battery pack.
 
-​	
- = 
-R
-1
-​	
-  
+Mechanical
 
-​	
-  
-1
-1
-1
-1
-​	
-  
-−1
-1
-1
-−1
-​	
-  
-−(L+W)
-(L+W)
-−(L+W)
-(L+W)
-​	
-  
+Chassis: 4WD Aluminum or Acrylic Robot Chassis.
 
-​	
-  
+Wheels: 4x 60mm/80mm Mecanum Wheels (Omnidirectional).
 
-​	
-  
-V 
-x
-​	
- 
-V 
-y
-​	
- 
-ω
-​	
-  
+Arm Structure: 3D Printed or Laser-cut Acrylic 4-DOF Robotic Arm Kit.
 
-​	
- 
-Arm Inverse Kinematics
+Hardware: M3 Screws, Nuts, and Brass Spacers.
 
-The arm utilizes a geometric IK approach to calculate joint angles based on the (X,Y,Z) coordinates of the end-effector.
+🛠️ Hardware Requirements
 
-## Software Stack
-Firmware: [e.g., C++/Arduino or MicroPython]
+Microcontroller: ESP32 (DevKit V1 or similar).
 
-Communication: [e.g., ROS2, Serial, or Wi-Fi/UDP]
+Motor Driver: L298N Dual H-Bridge Bridge.
 
-Libraries: * AccelStepper (for smooth motion)
+Actuators: 4x DC Motors (Mecanum Wheel Configuration).
 
-TinyInverseKinematics (or custom IK scripts)
+Servos: 4x High-Torque Servos (Base, Elbow, Wrist, Gripper).
 
-Installation
+Power Supply: 7.4V - 12V Li-ion or LiPo battery (with common ground to ESP32).
 
-Clone the repo:
+📋 Pin Mapping
+<img width="1036" height="465" alt="Screenshot 2026-01-07 at 11 37 22 AM" src="https://github.com/user-attachments/assets/e0390de0-eb9f-448e-aa6a-d8e411258706" />
 
-Bash
-git clone https://github.com/yourusername/5-axis-mecanum-arm.git
-Upload Firmware: Open src/main.cpp in VS Code (PlatformIO) or Arduino IDE and upload to your controller.
+💻 Software & Protocol
 
-Configure Pins: Adjust config.h to match your specific motor driver wiring.
+The system uses a custom MicroBlue Packet Decoder to interpret serial data:
+[SOH][ID][STX][Value][ETX]
 
-## Wiring Diagram
-Note: Ensure you are using a dedicated power supply (e.g., 12V 10A LiPo) as the peak current for 9+ motors can exceed standard USB power.
+Driving: Controlled via 'U' (Up), 'D' (Down), 'L' (Left), 'R' (Right).
 
-## Usage
-Power on the robot.
+Arm: Absolute positioning via sliders (sl0-sl2).
 
-Connect via [Bluetooth/Serial/Web Interface].
+Gripper: Toggle logic via button b0.
 
-Use the teleop script to control the base:
+🔧 Installation
 
-W/S: Forward/Backward
+Libraries: Install the ESP32Servo library via the Arduino Library Manager.
 
-A/D: Strafe Left/Right
+Board Manager: Ensure the ESP32 board package is installed (v3.0+ recommended).
 
-Q/E: Rotate
+Upload: Flash MicroBlue_Robot_Controller_Final.ino to your ESP32.
 
-Input (X,Y,Z) coordinates for the arm via the CLI or GUI.
+Connect: Open the MicroBlue app, scan for MicroBlue_RobotArm, and start controlling.
 
-## Future Improvements
-[ ] Add a 2-finger gripper with force feedback.
+📝 Resume Highlights
 
-[ ] Integrate LiDAR for autonomous navigation (SLAM).
+Integrated 4-Axis Robotic System (ESP32/BLE): Developed and deployed C++ firmware on an ESP32 for the real-time control of a 4-axis robot arm and mobile base.
 
-[ ] Implement MoveIt2 support for ROS2.
+Advanced Control & Protocol Implementation: Established a robust BLE connection using NUS and implemented a custom serial protocol for simultaneous kinematic and motor control.
 
-## License
-This project is licensed under the MIT License - see the LICENSE file for details.
+Developed as a part of an advanced robotics integration project focusing on embedded systems and wireless communication.
