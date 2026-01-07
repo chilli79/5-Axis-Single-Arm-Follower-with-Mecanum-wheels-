@@ -66,3 +66,4 @@ Rest State: Base: 180°, Elbow: 90°, Pivot: 90°.
 
 Developed as a part of an advanced robotics integration project focusing on embedded systems and wireless communication.
 
+https://github.com/user-attachments/assets/e526a737-c255-4b1f-9925-bbf39ca0b8ec
